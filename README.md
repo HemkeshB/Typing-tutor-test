@@ -1,3 +1,2 @@
 # Typing-tutor-test
-Typing test and tutor made with python utilizing the keyboard module
-User and word databases made with sqlite3
+Typing test and tutor made with Python utilizing the keyboard module along with sqlite3 used as storage for users and words.
