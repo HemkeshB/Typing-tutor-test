@@ -267,6 +267,35 @@ def StartTest(userID):
             print()
         testContinue = ContinueTest()
 
+def userStats(userID):
+    if userID is None:
+        print("No user history found")
+        return
+    connector = sqlite3.connect("testUsers.db")
+    cursor = connector.cursor()
+    cursor.execute("""SELECT AVG(numOfCharacters) FROM typingStats WHERE userid = ?""", userID)
+    averageTestLength = round(cursor.fetchone()[0] + 0,0)
+    cursor.execute("""SELECT AVG(averageWPM) FROM typingStats WHERE userid = ?""", userID)
+    averageWPM = round(cursor.fetchone()[0] + 0,0)
+    cursor.execute("""SELECT averageWPM FROM typingStats WHERE userid = ? ORDER BY averageWPM DESC""", userID)
+    highestWPM = round(cursor.fetchone()[0] + 0,0)
+    cursor.execute("""SELECT letter FROM letterStats WHERE userid = ? ORDER BY letterHistory""", userID)
+    worstLetter = cursor.fetchone()[0]
+    cursor.execute("""SELECT letter FROM letterStats WHERE userid = ? ORDER BY letterHistory DESC""", userID)
+    bestLetter = cursor.fetchone()[0]
+    print()
+    print("Average test length: " + averageTestLength.__str__())
+    print("Average WPM: " + averageWPM.__str__())
+    print("Highest WPM: " + highestWPM.__str__())
+    print("Best letter: " + bestLetter)
+    print("worst letter: " + worstLetter)
+    print()
+    print("press any key to continue")
+    while True:
+        event = keyboard.read_event()
+        if event.event_type is keyboard.KEY_DOWN:
+            keyboard.press('backspace')
+            break
 
 def userChoices():
     connector = sqlite3.connect("testUsers.db")
@@ -293,7 +322,7 @@ def userChoices():
         if choice == "1":
             StartTest(userID)
         if choice == "2":
-            print("Stats page still in progress")
+            userStats(userID)
         if choice == "3":
             connector = sqlite3.connect("testUsers.db")
             connector.execute('PRAGMA foreign_keys = ON;')
